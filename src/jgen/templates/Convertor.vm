@@ -1,0 +1,41 @@
+public static ${ClassA} convertToMergeInstConf(${ClassB} ${classB}){
+    ${ClassA} ${classA} = new ${ClassA}();
+
+    #foreach (${pro} in ${pros})
+    ${classA}.set${pro}(${classB}.get${pro}());
+    #end
+
+    #if(${extend})
+    Map<String, String> map = ${classA}.get${extend}();
+    if (StringUtil.isNotBlank(${classB}.get${extend}())) {
+        for (String pair : StringUtil.split(${classB}.get${extend}())) {
+            String[] words = StringUtil.split(pair, "=");
+            if (words != null && words.length == 2) {
+                map.put(words[0], words[1]);
+            }
+        }
+    }
+    #end
+    return ${classA};
+}
+
+public static ${ClassB} convertTo${ClassB}(${ClassA} ${classA}){
+    ${ClassB} ${classB} = new ${ClassB}();
+
+    #foreach (${pro} in ${pros})
+    ${classB}.set${pro}(${classA}.get${pro}());
+    #end
+
+    #if(${extend})
+    StringBuilder sb = new StringBuilder();
+    for (Map.Entry<String, String> entry: ${classA}.get${extend}().entrySet()) {
+        sb.append(entry.getKey());
+        sb.append("=");
+        sb.append(entry.getValue());
+        sb.append(" ");
+    }
+    ${classB}.set${extend}(sb.toString());
+    #end
+
+    return ${classB};
+}
